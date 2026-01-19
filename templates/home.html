@@ -1,27 +1,59 @@
 {% extends "layout.html" %}
 {% block content %}
-  {% for post in posts %}
-    <article class="content-section py-3 px-4 mb-4">
-      <div class="d-flex align-items-start gap-4">
-        <img class="rounded-circle article-img flex-shrink-0"
-             src="{{ post.author.image_path }}"
-             alt="{{ post.author.username }}'s profile picture"
-             width="64"
-             height="64"
-             loading="lazy">
-        <div class="flex-grow-1">
-          <div class="article-metadata mb-2">
-            <a class="me-2"
-               href="{{ url_for("user_posts", user_id=post.author.id) }}">{{ post.author.username }}</a>
-            <small class="text-body-secondary">{{ post.date_posted.strftime("%B %d, %Y") }}</small>
+  <div class="posts-container">
+    {% if posts %}
+      {% for post in posts %}
+        <article class="post-card content-section">
+          <div class="d-flex align-items-start gap-3 gap-md-4">
+            <!-- Author Avatar -->
+            <div class="author-avatar-wrapper flex-shrink-0">
+              <a href="{{ url_for("user_posts", user_id=post.author.id) }}" class="author-link">
+                <img class="rounded-circle author-avatar"
+                     src="{{ post.author.image_path }}"
+                     alt="{{ post.author.username }}'s profile picture"
+                     width="64"
+                     height="64"
+                     loading="lazy">
+              </a>
+            </div>
+            
+            <!-- Post Content -->
+            <div class="post-content flex-grow-1">
+              <!-- Author Info -->
+              <div class="post-meta mb-3">
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                  <div>
+                    <a class="author-name"
+                       href="{{ url_for("user_posts", user_id=post.author.id) }}">{{ post.author.username }}</a>
+                    <div class="post-date text-body-secondary">{{ post.date_posted.strftime("%B %d, %Y") }}</div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Post Title -->
+              <h2 class="post-title mb-3">
+                <a class="article-title"
+                   href="{{ url_for("post_page", post_id=post.id) }}">{{ post.title }}</a>
+              </h2>
+              
+              <!-- Post Excerpt -->
+              <p class="article-content text-truncate-excerpt mb-0">{{ post.content }}</p>
+              
+              <!-- Read More Link -->
+              <div class="post-actions mt-3">
+                <a class="read-more-link" href="{{ url_for("post_page", post_id=post.id) }}">
+                  Read More →
+                </a>
+              </div>
+            </div>
           </div>
-          <h2>
-            <a class="article-title"
-               href="{{ url_for("post_page", post_id=post.id) }}">{{ post.title }}</a>
-          </h2>
-          <p class="article-content">{{ post.content }}</p>
-        </div>
+        </article>
+      {% endfor %}
+    {% else %}
+      <div class="empty-state text-center py-5">
+        <h3 class="text-muted mb-2">No posts yet</h3>
+        <p class="text-body-secondary">Check back soon for new content!</p>
       </div>
-    </article>
-  {% endfor %}
+    {% endif %}
+  </div>
 {% endblock content %}
